@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
+using UrlShortener.Core.DTOs.URLs;
 using UrlShortener.Core.Entities;
 using UrlShortener.Core.Repositories.Interfaces;
 
@@ -29,7 +31,23 @@ public class UrlsRepository(ApplicationDbContext context) : IUrlsRepository
     {
         return await context.UrlInfos.FirstOrDefaultAsync(x=>x.Code == code);
     }
-    
+
+    public async Task<IEnumerable<UrlInfo>> GetUrlsAsync(UrlsGetRequest request)
+    {
+        var urls = context.UrlInfos.AsQueryable();
+
+        urls = request.SortDirection == "asc" ? urls.OrderBy(x => x.CreatedAt) : urls.OrderByDescending(x => x.CreatedAt);
+
+        return await urls.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToListAsync();
+    }
+
+    public async Task DeleteUrlAsync(UrlInfo urlInfo)
+    {
+        context.UrlInfos.Remove(urlInfo);
+
+        await context.SaveChangesAsync();
+    }
+
     public async Task<bool> IsCodeAlreadyExist(string code)
     {
         return await context.UrlInfos.AnyAsync(x=>x.Code == code);

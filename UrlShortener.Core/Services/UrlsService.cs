@@ -50,4 +50,31 @@ public class UrlsService(IUrlsRepository urlsRepository, IUrlShortenerService ur
         
         return urlInfo.OriginalUrl;
     }
+
+    public async Task<UrlGetResponse> GetUrlByIdAsync(Guid id)
+    {
+        var url = await urlsRepository.GetUrlByIdAsync(id);
+
+        if (url is null)
+            throw new NotFoundException($"Resource type: {nameof(UrlInfo)} with id: {id} does not exist");
+
+        return url.ToDto();
+    }
+
+    public async Task<IEnumerable<UrlGetResponse>> GetUrlsAsync(UrlsGetRequest request)
+    {
+        var urls = await urlsRepository.GetUrlsAsync(request);
+
+        return urls.Select(x => x.ToDto());
+    }
+
+    public async Task DeleteUrlAsync(Guid id)
+    {
+        var url = await urlsRepository.GetUrlByIdAsync(id);
+
+        if (url is null)
+            throw new NotFoundException($"Resource type: {nameof(UrlInfo)} with id: {id} does not exist");
+
+        await urlsRepository.DeleteUrlAsync(url);
+    }
 }

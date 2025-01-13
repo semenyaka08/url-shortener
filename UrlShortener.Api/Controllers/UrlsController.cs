@@ -6,10 +6,10 @@ namespace UrlShortener.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UrlsController(IUrlsService urlsService) : ControllerBase
+public class UrlController(IUrlsService urlsService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> GenerateLink([FromBody] GenerateUrlRequest request)
+    public async Task<IActionResult> CreateShortenedUrl([FromBody] GenerateUrlRequest request)
     {
         if (!Uri.TryCreate(request.OriginalUrl, UriKind.Absolute, out _))
             return BadRequest("The given url is invalid");
@@ -19,11 +19,35 @@ public class UrlsController(IUrlsService urlsService) : ControllerBase
         return Ok(shortenedUrl);
     }
 
-    [HttpGet("{code}")]
+    [HttpGet("code/{code}")]
     public async Task<IActionResult> RedirectToOriginalUrl([FromRoute] string code)
     {
         var originalUrl = await urlsService.GetUrlByCodeAsync(code);
 
         return Redirect(originalUrl);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUrlById ([FromRoute] Guid id)
+    {
+        var urlInfo = await urlsService.GetUrlByIdAsync(id);
+
+        return Ok(urlInfo);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUrls([FromQuery] UrlsGetRequest request)
+    {
+        var urls = await urlsService.GetUrlsAsync(request);
+
+        return Ok(urls);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUrl([FromRoute] Guid id)
+    {
+        await urlsService.DeleteUrlAsync(id);
+
+        return NoContent();
     }
 }

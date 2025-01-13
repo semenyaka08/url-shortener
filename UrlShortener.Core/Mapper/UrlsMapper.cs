@@ -10,10 +10,22 @@ public static class UrlsMapper
         return new UrlInfo
         {
             Id = Guid.NewGuid(),
-            ShortenedUrl = $"{schema}://{host}/api/{code}",
+            ShortenedUrl = $"{schema}://{host}/api/url/code/{code}",
             Code = code,
             OriginalUrl = request.OriginalUrl,
             CreatedAt = DateTime.Now
+        };
+    }
+
+    public static UrlGetResponse ToDto(this UrlInfo urlInfo)
+    {
+        return new UrlGetResponse
+        {
+            Id = urlInfo.Id,
+            ShortenedUrl = urlInfo.ShortenedUrl,
+            Code = urlInfo.Code,
+            OriginalUrl = urlInfo.OriginalUrl,
+            CreatedAt = urlInfo.CreatedAt
         };
     }
 }
