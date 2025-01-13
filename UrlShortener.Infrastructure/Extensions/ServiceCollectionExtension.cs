@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UrlShortener.Core.Repositories.Interfaces;
 using UrlShortener.Infrastructure.Repositories;
+using UrlShortener.Infrastructure.Seeders;
 
 namespace UrlShortener.Infrastructure.Extensions;
 
@@ -15,5 +16,6 @@ public static class ServiceCollectionExtension
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
+        services.AddScoped<IDataSeeder, DataSeeder>();
     }
 }

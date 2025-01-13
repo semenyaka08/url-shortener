@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using UrlShortener.Core.DTOs.URLs;
 using UrlShortener.Core.Services.Interfaces;
 
@@ -8,6 +9,7 @@ namespace UrlShortener.Api.Controllers;
 [Route("api/[controller]")]
 public class UrlController(IUrlsService urlsService) : ControllerBase
 {
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateShortenedUrl([FromBody] GenerateUrlRequest request)
     {
@@ -18,7 +20,7 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
 
         return Ok(shortenedUrl);
     }
-
+    
     [HttpGet("code/{code}")]
     public async Task<IActionResult> RedirectToOriginalUrl([FromRoute] string code)
     {
@@ -27,6 +29,7 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
         return Redirect(originalUrl);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUrlById ([FromRoute] Guid id)
     {
@@ -35,6 +38,7 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
         return Ok(urlInfo);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetUrls([FromQuery] UrlsGetRequest request)
     {
@@ -43,6 +47,7 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
         return Ok(urls);
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUrl([FromRoute] Guid id)
     {
