@@ -20,7 +20,7 @@ public class UrlsController(IUrlsService urlsService) : ControllerBase
     }
 
     [HttpGet("{code}")]
-    public async Task<IActionResult> GetLink([FromRoute] string code)
+    public async Task<IActionResult> RedirectToOriginalUrl([FromRoute] string code)
     {
         var originalUrl = await urlsService.GetUrlByCodeAsync(code);
 
