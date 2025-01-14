@@ -10,5 +10,6 @@ public static class ServiceCollectionExtension
     {
         services.AddScoped<IUrlsService, UrlsService>();
         services.AddScoped<IUrlShortenerService, UrlShortenerService>();
+        services.AddScoped<IAlgorithmService, AlgorithmService>();
     }
 }

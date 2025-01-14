@@ -15,25 +15,6 @@ export class LinksService {
 
   pageResult = signal<PageResult<UrlInfo>>(null!);
 
-  // createLink(originalUrl: string){
-  //   const body = {OriginalUrl: originalUrl};
-  //
-  //   return this.httpClient.post<UrlInfo>(`${this.apiUrl}url`, body, {
-  //     withCredentials: true,
-  //   }).pipe(
-  //     tap((newLink) => {
-  //       this.pageResult.update((currentPageResult) => {
-  //         if (!currentPageResult) return null;
-  //         return {
-  //           ...currentPageResult,
-  //           items: [newLink, ...currentPageResult.items],
-  //           totalItemsCount: currentPageResult.totalItemsCount + 1,
-  //         };
-  //       });
-  //     })
-  //   );
-  // }
-
   createLink(originalUrl: string) {
     const body = { OriginalUrl: originalUrl };
 
@@ -83,16 +64,6 @@ export class LinksService {
       this.pageResult.set(response);
     }));
   }
-
-  // deleteLink(id: string){
-  //   const url = `${this.apiUrl}url/${id}`;
-  //
-  //   return this.httpClient.delete(url, {withCredentials: true}).pipe(
-  //     tap(()=>{
-  //       this.pageResult().items = this.pageResult().items.filter(z=>z.id !== id)
-  //     })
-  //   );
-  // }
 
   deleteLink(id: string) {
     const url = `${this.apiUrl}url/${id}`;

@@ -1,0 +1,27 @@
+<div class="p-6 bg-gray-100 min-h-screen flex flex-col items-start">
+  <mat-card class="w-full max-w-xl">
+    <mat-card-content *ngIf="algorithm">
+      <div *ngIf="!isEditing">
+        <h2 class="text-2xl font-semibold text-gray-700">{{ algorithm()?.title }}</h2>
+        <p class="text-gray-600 mt-4">{{ algorithm()?.description }}</p>
+      </div>
+
+      <div *ngIf="isEditing">
+        <mat-form-field appearance="fill" class="w-full mt-4">
+          <mat-label>Title</mat-label>
+          <input matInput [(ngModel)]="editableAlgorithm.title" />
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="w-full mt-4">
+          <mat-label>Description</mat-label>
+          <textarea matInput [(ngModel)]="editableAlgorithm.description"></textarea>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions class="flex justify-end space-x-4">
+      <button *ngIf="!isEditing" mat-raised-button color="primary" (click)="editAlgorithm()">Edit</button>
+      <button *ngIf="isEditing" mat-raised-button color="primary" (click)="saveChanges()">Save</button>
+      <button *ngIf="isEditing" mat-raised-button color="warn" (click)="cancelEditing()">Cancel</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

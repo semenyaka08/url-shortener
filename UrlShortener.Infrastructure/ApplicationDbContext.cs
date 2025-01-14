@@ -10,7 +10,8 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext<
     public DbSet<UrlInfo> UrlInfos { get; set; }
 
     public DbSet<AppUser> AppUsers { get; set; }
-    
+
+    public DbSet<Algorithm> Algorithms { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UrlInfo>(builder =>

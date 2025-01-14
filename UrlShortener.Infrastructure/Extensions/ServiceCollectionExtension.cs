@@ -17,5 +17,6 @@ public static class ServiceCollectionExtension
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
         services.AddScoped<IDataSeeder, DataSeeder>();
+        services.AddScoped<IAlgorithmRepository, AlgorithmRepository>();
     }
 }
