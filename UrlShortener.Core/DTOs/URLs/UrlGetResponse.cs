@@ -11,4 +11,6 @@ public class UrlGetResponse
     public required string OriginalUrl { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    public required string UserEmail { get; set; }
 }

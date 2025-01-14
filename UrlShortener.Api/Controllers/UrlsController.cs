@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using UrlShortener.Api.Extensions;
 using UrlShortener.Core.DTOs.URLs;
 using UrlShortener.Core.Services.Interfaces;
 
@@ -16,7 +17,12 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
         if (!Uri.TryCreate(request.OriginalUrl, UriKind.Absolute, out _))
             return BadRequest("The given url is invalid");
 
-        var shortenedUrl = await urlsService.GenerateUrlAsync(request, HttpContext.Request.Scheme, HttpContext.Request.Host.ToString());
+        string? userEmail = User.GetEmail();
+        
+        if (userEmail == null)
+            return BadRequest("Current user has no email");
+        
+        var shortenedUrl = await urlsService.GenerateUrlAsync(request, HttpContext.Request.Scheme, HttpContext.Request.Host.ToString(), userEmail);
 
         return Ok(shortenedUrl);
     }
@@ -33,7 +39,13 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUrlById ([FromRoute] Guid id)
     {
-        var urlInfo = await urlsService.GetUrlByIdAsync(id);
+        string? userEmail = User.GetEmail();
+        bool isAdmin = User.IsInRole("Admin");
+        
+        if (userEmail == null)
+            return BadRequest("Current user has no email");
+        
+        var urlInfo = await urlsService.GetUrlByIdAsync(id, userEmail, isAdmin);
 
         return Ok(urlInfo);
     }
@@ -42,7 +54,12 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetUrls([FromQuery] UrlsGetRequest request)
     {
-        var urls = await urlsService.GetUrlsAsync(request);
+        string? userEmail = User.GetEmail();
+        
+        if (userEmail == null)
+            return BadRequest("Current user has no email");
+        
+        var urls = await urlsService.GetUrlsAsync(request, userEmail);
 
         return Ok(urls);
     }
@@ -51,7 +68,13 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUrl([FromRoute] Guid id)
     {
-        await urlsService.DeleteUrlAsync(id);
+        string? userEmail = User.GetEmail();
+        bool isAdmin = User.IsInRole("Admin");
+        
+        if (userEmail == null)
+            return BadRequest("Current user has no email");
+        
+        await urlsService.DeleteUrlAsync(id, userEmail, isAdmin);
 
         return NoContent();
     }

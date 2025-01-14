@@ -1,4 +1,5 @@
-﻿using UrlShortener.Core.DTOs.URLs;
+﻿using UrlShortener.Core.DTOs.Admin;
+using UrlShortener.Core.DTOs.URLs;
 using UrlShortener.Core.Entities;
 
 namespace UrlShortener.Core.Repositories.Interfaces;
@@ -15,7 +16,9 @@ public interface IUrlsRepository
 
     Task<UrlInfo?> GetUrlByCodeAsync(string code);
 
-    Task<IEnumerable<UrlInfo>> GetUrlsAsync(UrlsGetRequest request);
+    Task<(IEnumerable<UrlInfo>, int)> GetUrlsAsync(UrlsGetRequest request, string userEmail);
 
     Task DeleteUrlAsync(UrlInfo urlInfo);
+
+    Task<(IEnumerable<UrlInfo>, int)> GetAllUrlsAsync(AdminUrlsGetRequest request);
 }

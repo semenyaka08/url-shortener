@@ -17,6 +17,13 @@ public class ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> lo
             await context.Response.WriteAsync(exception.Message);
             logger.LogWarning(exception.Message);
         }
+        catch (ForbiddenException exception)
+        {
+            context.Response.StatusCode = 403;
+            
+            await context.Response.WriteAsync(exception.Message);
+            logger.LogWarning(exception.Message);
+        }
         catch (UrlAlreadyShortenedException exception)
         {
             context.Response.StatusCode = 400;

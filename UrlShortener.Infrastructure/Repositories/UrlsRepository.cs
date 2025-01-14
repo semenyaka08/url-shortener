@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using UrlShortener.Core.DTOs.Admin;
 using UrlShortener.Core.DTOs.URLs;
 using UrlShortener.Core.Entities;
 using UrlShortener.Core.Repositories.Interfaces;
@@ -32,13 +33,17 @@ public class UrlsRepository(ApplicationDbContext context) : IUrlsRepository
         return await context.UrlInfos.FirstOrDefaultAsync(x=>x.Code == code);
     }
 
-    public async Task<IEnumerable<UrlInfo>> GetUrlsAsync(UrlsGetRequest request)
+    public async Task<(IEnumerable<UrlInfo>, int)> GetUrlsAsync(UrlsGetRequest request, string userEmail)
     {
-        var urls = context.UrlInfos.AsQueryable();
+        var query = context.UrlInfos.Where(z => (request.SearchParam == null
+                                                || z.Id.ToString() == request.SearchParam)
+                                                && z.UserEmail == userEmail);
 
-        urls = request.SortDirection == "asc" ? urls.OrderBy(x => x.CreatedAt) : urls.OrderByDescending(x => x.CreatedAt);
+        int totalCount = await query.CountAsync();
+        
+        query = request.SortDirection == "asc" ? query.OrderBy(GetSelectorKey(request.SortBy)) : query.OrderByDescending(GetSelectorKey(request.SortBy));
 
-        return await urls.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToListAsync();
+        return (await query.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToListAsync(), totalCount);
     }
 
     public async Task DeleteUrlAsync(UrlInfo urlInfo)
@@ -48,8 +53,31 @@ public class UrlsRepository(ApplicationDbContext context) : IUrlsRepository
         await context.SaveChangesAsync();
     }
 
+    public async Task<(IEnumerable<UrlInfo>, int)> GetAllUrlsAsync(AdminUrlsGetRequest request)
+    {
+        var query = context.UrlInfos.Where(z => request.SearchParam == null
+                                                 || z.UserEmail.Contains(request.SearchParam)
+                                                 || z.Id.ToString() == request.SearchParam);
+
+        int totalCount = await query.CountAsync();
+        
+        query = request.SortDirection == "asc" ? query.OrderBy(GetSelectorKey(request.SortBy)) : query.OrderByDescending(GetSelectorKey(request.SortBy));
+
+        return (await query.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize).ToListAsync(), totalCount);
+    }
+
     public async Task<bool> IsCodeAlreadyExist(string code)
     {
         return await context.UrlInfos.AnyAsync(x=>x.Code == code);
+    }
+    
+    private Expression<Func<UrlInfo, object>> GetSelectorKey(string? sortItem)
+    {
+        return sortItem switch
+        {
+            "date" => z => z.CreatedAt,
+            "id" => z => z.Id,
+            _ => z => z.Id
+        };
     }
 }

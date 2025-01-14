@@ -5,7 +5,7 @@ namespace UrlShortener.Core.Mapper;
 
 public static class UrlsMapper
 {
-    public static UrlInfo ToEntity(this GenerateUrlRequest request, string code, string schema, string host)
+    public static UrlInfo ToEntity(this GenerateUrlRequest request, string code, string schema, string host, string userEmail)
     {
         return new UrlInfo
         {
@@ -13,7 +13,8 @@ public static class UrlsMapper
             ShortenedUrl = $"{schema}://{host}/api/url/code/{code}",
             Code = code,
             OriginalUrl = request.OriginalUrl,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.Now,
+            UserEmail = userEmail
         };
     }
 
@@ -25,7 +26,8 @@ public static class UrlsMapper
             ShortenedUrl = urlInfo.ShortenedUrl,
             Code = urlInfo.Code,
             OriginalUrl = urlInfo.OriginalUrl,
-            CreatedAt = urlInfo.CreatedAt
+            CreatedAt = urlInfo.CreatedAt,
+            UserEmail = urlInfo.UserEmail
         };
     }
 }
