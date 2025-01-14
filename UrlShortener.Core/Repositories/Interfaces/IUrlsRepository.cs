@@ -6,7 +6,7 @@ namespace UrlShortener.Core.Repositories.Interfaces;
 
 public interface IUrlsRepository
 {
-    Task<string> AddUrlAsync(UrlInfo urlInfo);
+    Task<UrlInfo> AddUrlAsync(UrlInfo urlInfo);
 
     Task<UrlInfo?> GetUrlByIdAsync(Guid id);
 

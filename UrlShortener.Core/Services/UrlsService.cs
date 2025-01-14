@@ -12,7 +12,7 @@ namespace UrlShortener.Core.Services;
 
 public class UrlsService(IUrlsRepository urlsRepository, IUrlShortenerService urlShortenerService, ILogger<UrlsService> logger) : IUrlsService
 {
-    public async Task<string> GenerateUrlAsync(GenerateUrlRequest addRequest, string schema, string host, string userEmail)
+    public async Task<UrlGetResponse> GenerateUrlAsync(GenerateUrlRequest addRequest, string schema, string host, string userEmail)
     {
         logger.LogInformation("Generating a short URL for the original URL: {OriginalUrl}", addRequest.OriginalUrl);
         
@@ -32,7 +32,7 @@ public class UrlsService(IUrlsRepository urlsRepository, IUrlShortenerService ur
         var shortenedUrl = await urlsRepository.AddUrlAsync(entity);
         logger.LogInformation("Successfully added the shortened URL to the repository: {ShortenedUrl}", shortenedUrl);
 
-        return shortenedUrl;
+        return shortenedUrl.ToDto();
     }
 
     public async Task<string> GetUrlByCodeAsync(string code)

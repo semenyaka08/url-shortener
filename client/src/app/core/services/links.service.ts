@@ -53,6 +53,12 @@ export class LinksService {
     );
   }
 
+  getLinkById(id: string){
+    let url = `${this.apiUrl}url/${id}`;
+
+    return this.httpClient.get<UrlInfo>(url, {withCredentials: true});
+  }
+
   getLinksForSpecificUser(linksParameters: LinksParameters){
     let url = this.apiUrl + 'url';
     const params = new URLSearchParams();

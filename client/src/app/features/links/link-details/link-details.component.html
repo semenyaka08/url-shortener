@@ -1,0 +1,35 @@
+<div class="container mx-auto p-4">
+  <mat-card class="shadow-md">
+    <mat-card-header class="mb-8">
+      <mat-card-title class="text-lg font-semibold">URL Information</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="space-y-4">
+        <div>
+          <span class="font-medium">ID:</span> {{ urlInfo()!.id }}
+        </div>
+        <div>
+          <span class="font-medium">Shortened URL:</span>
+          <a href="{{ urlInfo()!.shortenedUrl }}" target="_blank" class="text-blue-500 hover:underline">
+            {{ urlInfo()!.shortenedUrl }}
+          </a>
+        </div>
+        <div>
+          <span class="font-medium">Code:</span> {{ urlInfo()!.code }}
+        </div>
+        <div>
+          <span class="font-medium">Original URL:</span>
+          <a href="{{ urlInfo()!.originalUrl }}" target="_blank" class="text-blue-500 hover:underline">
+            {{ urlInfo()!.originalUrl }}
+          </a>
+        </div>
+        <div>
+          <span class="font-medium">Created At:</span> {{ urlInfo()!.createdAt | date:'medium' }}
+        </div>
+        <div>
+          <span class="font-medium">User Email:</span> {{ urlInfo()!.userEmail }}
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

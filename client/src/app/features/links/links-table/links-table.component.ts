@@ -16,6 +16,7 @@ import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {DatePipe, NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-links-table',
@@ -37,7 +38,8 @@ import {MatIconButton} from '@angular/material/button';
     MatPaginator,
     NgIf,
     MatIcon,
-    MatIconButton
+    MatIconButton,
+    RouterLink
   ],
   templateUrl: './links-table.component.html',
   standalone: true,
@@ -46,7 +48,7 @@ import {MatIconButton} from '@angular/material/button';
 export class LinksTableComponent implements OnInit, AfterViewInit{
   displayedColumns: string[] = ['shortenedUrl', 'originalUrl', 'createdAt', 'actions'];
   dataSource = new MatTableDataSource<UrlInfo>([]);
-
+  private router = inject(Router);
   linksService = inject(LinksService);
 
   linksParameters: LinksParameters = {
@@ -94,5 +96,14 @@ export class LinksTableComponent implements OnInit, AfterViewInit{
         console.error("Error deleting the link:", err);
       }
     })
+  }
+
+  goToUrlDetails(id: string) {
+    this.router.navigate([`/links/`, id]);
+  }
+
+  onLinkClick(event: MouseEvent, url: string) {
+    event.stopPropagation();
+    window.open(url, '_blank');
   }
 }

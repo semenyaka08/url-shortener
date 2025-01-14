@@ -9,13 +9,13 @@ namespace UrlShortener.Infrastructure.Repositories;
 
 public class UrlsRepository(ApplicationDbContext context) : IUrlsRepository
 {
-    public async Task<string> AddUrlAsync(UrlInfo urlInfo)
+    public async Task<UrlInfo> AddUrlAsync(UrlInfo urlInfo)
     {
         await context.UrlInfos.AddAsync(urlInfo);
 
         await context.SaveChangesAsync();
 
-        return urlInfo.ShortenedUrl;
+        return urlInfo;
     }
 
     public async Task<UrlInfo?> GetUrlByIdAsync(Guid id)

@@ -6,7 +6,7 @@ namespace UrlShortener.Core.Services.Interfaces;
 
 public interface IUrlsService
 {
-    Task<string> GenerateUrlAsync(GenerateUrlRequest addRequest, string schema, string host, string userEmail);
+    Task<UrlGetResponse> GenerateUrlAsync(GenerateUrlRequest addRequest, string schema, string host, string userEmail);
 
     Task<string> GetUrlByCodeAsync(string code);
 
