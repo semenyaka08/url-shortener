@@ -1,10 +1,13 @@
 import {Component, inject} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {CreateLinkComponent} from './create-link/create-link.component';
+import {LinksTableComponent} from './links-table/links-table.component';
 
 @Component({
   selector: 'app-links',
-  imports: [],
+  imports: [
+    LinksTableComponent
+  ],
   templateUrl: './links.component.html',
   standalone: true,
   styleUrl: './links.component.scss'

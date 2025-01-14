@@ -1,1 +1,42 @@
-<p>links-table works!</p>
+<div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" class="bg-white">
+        <ng-container matColumnDef="shortenedUrl">
+          <th mat-header-cell *matHeaderCellDef> Shortened Url </th>
+          <td mat-cell *matCellDef="let url"> <a href="{{url.shortenedUrl}}" target="_blank">{{url.shortenedUrl}}</a></td>
+        </ng-container>
+
+      <ng-container matColumnDef="originalUrl">
+        <th mat-header-cell *matHeaderCellDef class="myOwnWidth"> Original Url </th>
+        <td mat-cell *matCellDef="let url" class="myOwnWidth"> <a href="{{url.originalUrl}}" target="_blank">{{url.originalUrl}}</a> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef > Date </th>
+        <td mat-cell *matCellDef="let url" > {{url.createdAt | date: 'short'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let url">
+          <button mat-icon-button (click)="deleteUrl(url.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator class="bg-green-700 paginator"
+                   *ngIf="pageResult"
+                   (page) = "onPageEvent($event)"
+                   [length]="pageResult.totalItemsCount"
+                   [pageSize]="linksParameters.paginationParams?.pageSize"
+                   [showFirstLastButtons]="true"
+                   [pageSizeOptions]="[4, 8]"
+                   [pageIndex]="pageResult.pageNumber - 1"
+                   aria-label="Select Page" />
+  </div>
+</div>
