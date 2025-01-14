@@ -44,7 +44,7 @@ export class CreateLinkComponent {
         this.dialogRef.close();
         this.dialogService.open(ShortenedLinkComponent, {
           maxWidth: '500px',
-          data: shortenedLink
+          data: shortenedLink.shortenedUrl
         })
       },
       error: err => this.validationErrors = err

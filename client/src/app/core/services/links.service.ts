@@ -1,9 +1,10 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {environment} from '../../environment/environment.development';
 import {HttpClient} from '@angular/common/http';
 import {PageResult} from '../../shared/models/page-result';
 import {UrlInfo} from '../../shared/models/url-info';
 import {LinksParameters} from '../../shared/models/links-params';
+import {tap} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,44 @@ export class LinksService {
   apiUrl = environment.apiUrl;
   httpClient = inject(HttpClient);
 
-  createLink(originalUrl: string){
-    const body = {OriginalUrl: originalUrl};
+  pageResult = signal<PageResult<UrlInfo>>(null!);
 
-    return this.httpClient.post<string>(`${this.apiUrl}url`, body,
-      {
-        responseType: 'text' as 'json',
-        withCredentials: true});
+  // createLink(originalUrl: string){
+  //   const body = {OriginalUrl: originalUrl};
+  //
+  //   return this.httpClient.post<UrlInfo>(`${this.apiUrl}url`, body, {
+  //     withCredentials: true,
+  //   }).pipe(
+  //     tap((newLink) => {
+  //       this.pageResult.update((currentPageResult) => {
+  //         if (!currentPageResult) return null;
+  //         return {
+  //           ...currentPageResult,
+  //           items: [newLink, ...currentPageResult.items],
+  //           totalItemsCount: currentPageResult.totalItemsCount + 1,
+  //         };
+  //       });
+  //     })
+  //   );
+  // }
+
+  createLink(originalUrl: string) {
+    const body = { OriginalUrl: originalUrl };
+
+    return this.httpClient.post<UrlInfo>(`${this.apiUrl}url`, body, {
+      withCredentials: true,
+    }).pipe(
+      tap((newLink) => {
+        this.pageResult.update((currentPageResult) => {
+          if (!currentPageResult) throw new Error('PageResult is not initialized');
+          return {
+            ...currentPageResult,
+            items: [newLink, ...currentPageResult.items],
+            totalItemsCount: currentPageResult.totalItemsCount + 1,
+          };
+        });
+      })
+    );
   }
 
   getLinksForSpecificUser(linksParameters: LinksParameters){
@@ -41,12 +73,35 @@ export class LinksService {
 
     url += `?${params.toString()}`;
 
-    return this.httpClient.get<PageResult<UrlInfo>>(url, {withCredentials: true});
+    return this.httpClient.get<PageResult<UrlInfo>>(url, {withCredentials: true}).pipe(tap((response)=>{
+      this.pageResult.set(response);
+    }));
   }
 
-  deleteLink(id: string){
+  // deleteLink(id: string){
+  //   const url = `${this.apiUrl}url/${id}`;
+  //
+  //   return this.httpClient.delete(url, {withCredentials: true}).pipe(
+  //     tap(()=>{
+  //       this.pageResult().items = this.pageResult().items.filter(z=>z.id !== id)
+  //     })
+  //   );
+  // }
+
+  deleteLink(id: string) {
     const url = `${this.apiUrl}url/${id}`;
 
-    return this.httpClient.delete(url, {withCredentials: true});
+    return this.httpClient.delete(url, { withCredentials: true }).pipe(
+      tap(() => {
+        this.pageResult.update((currentPageResult) => {
+          if (!currentPageResult) throw new Error('PageResult is not initialized');
+          return {
+            ...currentPageResult,
+            items: currentPageResult.items.filter((item) => item.id !== id),
+            totalItemsCount: currentPageResult.totalItemsCount - 1,
+          };
+        });
+      })
+    );
   }
 }

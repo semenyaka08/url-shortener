@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, computed, effect, inject, OnInit, ViewChild} from '@angular/core';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatSelect} from '@angular/material/select';
 import {
@@ -12,7 +12,6 @@ import {
 import {UrlInfo} from '../../../shared/models/url-info';
 import {LinksService} from '../../../core/services/links.service';
 import {LinksParameters} from '../../../shared/models/links-params';
-import {PageResult} from '../../../shared/models/page-result';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {DatePipe, NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
@@ -47,18 +46,26 @@ import {MatIconButton} from '@angular/material/button';
 export class LinksTableComponent implements OnInit, AfterViewInit{
   displayedColumns: string[] = ['shortenedUrl', 'originalUrl', 'createdAt', 'actions'];
   dataSource = new MatTableDataSource<UrlInfo>([]);
+
   linksService = inject(LinksService);
+
   linksParameters: LinksParameters = {
     selectedSort: {sortBy: 'id', sortDirection: 'asc'},
     paginationParams: {pageNumber: 1, pageSize: 4},
   };
 
-  pageResult!: PageResult<UrlInfo>;
+  pageResult = computed(()=> this.linksService.pageResult());
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+  }
+
+  constructor() {
+    effect(() => {
+      this.dataSource.data = [...this.pageResult().items];
+    });
   }
 
   ngOnInit(): void {
@@ -67,9 +74,7 @@ export class LinksTableComponent implements OnInit, AfterViewInit{
 
   loadLinks() {
     this.linksService.getLinksForSpecificUser(this.linksParameters).subscribe({
-      next: (data) => {
-        this.pageResult = data;
-        this.dataSource.data = data.items;},
+      next: () => {},
       error: (err) => {console.log(err)}
     });
   }
@@ -84,7 +89,6 @@ export class LinksTableComponent implements OnInit, AfterViewInit{
     this.linksService.deleteLink(id).subscribe({
       next: ()=>{
         console.log("Link was deleted");
-        this.loadLinks();
       },
       error: (err)=>{
         console.error("Error deleting the link:", err);

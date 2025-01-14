@@ -32,11 +32,11 @@
     <mat-paginator class="bg-green-700 paginator"
                    *ngIf="pageResult"
                    (page) = "onPageEvent($event)"
-                   [length]="pageResult.totalItemsCount"
+                   [length]="pageResult().totalItemsCount"
                    [pageSize]="linksParameters.paginationParams?.pageSize"
                    [showFirstLastButtons]="true"
                    [pageSizeOptions]="[4, 8]"
-                   [pageIndex]="pageResult.pageNumber - 1"
+                   [pageIndex]="pageResult().pageNumber - 1"
                    aria-label="Select Page" />
   </div>
 </div>
