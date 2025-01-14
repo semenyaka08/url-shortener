@@ -22,5 +22,8 @@ public static class ServiceCollectionExtension
         builder.Services.AddIdentityApiEndpoints<AppUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+        
+        //Enabling CORS
+        builder.Services.AddCors();
     }
 }

@@ -1,0 +1,43 @@
+<header class="flex items-center justify-between bg-white py-5 px-8 shadow-md gap-4 w-full">
+  <div class="flex items-center text-xl font-bold">
+    <a routerLink="">
+      <span class="text-blue-600">Url Shortener</span>
+    </a>
+  </div>
+
+  <div class="flex gap-8">
+    <button *appIsAdmin routerLink="admin" mat-button class="flex items-center bg-green-500 text-white py-2 px-4 rounded-md">
+      <span class="ml-0 text-lg">Admin</span>
+    </button>
+
+    <div class="flex items-center space-x-2 gap-3">
+      <div class="flex items-center gap-4">
+        @if (accountService.currentUser()){
+          <a [matMenuTriggerFor]="menu" class="mt-1 cursor-pointer">
+            <mat-icon class="large-icon">person</mat-icon>
+          </a>
+          <mat-menu #menu="matMenu">
+            <div class="flex flex-col gap-2 px-4 py-2">
+              <button routerLink="orders" mat-menu-item>
+                <mat-icon>history</mat-icon>
+                Orders
+              </button>
+              <mat-divider />
+              <button mat-menu-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                Logout
+              </button>
+            </div>
+          </mat-menu>
+        } @else {
+          <button routerLink="account/login" mat-stroked-button>
+            Login
+          </button>
+          <button routerLink="account/register" mat-flat-button>
+            Register
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+</header>
