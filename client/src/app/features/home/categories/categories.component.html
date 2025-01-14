@@ -1,0 +1,9 @@
+<ul class="bg-gray-100 rounded-lg shadow-lg p-4 space-y-2">
+  @for (category of categories; track $index){
+    <li
+      [routerLink]="category.toLowerCase()"
+      class="cursor-pointer px-4 py-2 rounded-md transition duration-200 ease-in-out hover:bg-blue-500 hover:text-white text-lg font-semibold tracking-wide">
+      {{ category }}
+    </li>
+  }
+</ul>

@@ -1,0 +1,21 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="py-10 px-8">
+  <div class="text-center mb-8 text-blue-600">
+    <h2 class="text-2xl font-semibold">Short your link</h2>
+  </div>
+  <mat-form-field appearance="fill" class="w-full mb-6">
+    <mat-label>Original Url</mat-label>
+    <input formControlName="originalUrl" type="text" matInput />
+  </mat-form-field>
+  @if(validationErrors){
+    <div class="text-red-600">
+      <ul>
+        @for (error of validationErrors; track $index){
+          <li>{{error}}</li>
+        }
+      </ul>
+    </div>
+  }
+  <button [disabled]="registerForm.invalid" mat-flat-button type="submit" class="w-full py-2 mt-4">
+    Create Link
+  </button>
+</form>
