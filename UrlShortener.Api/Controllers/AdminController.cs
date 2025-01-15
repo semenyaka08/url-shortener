@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UrlShortener.Core.DTOs.Admin;
 using UrlShortener.Core.Services.Interfaces;
+using UrlShortener.Dal;
 
 namespace UrlShortener.Api.Controllers;
 
@@ -10,7 +11,7 @@ namespace UrlShortener.Api.Controllers;
 public class AdminController(IUrlsService urlsService) : ControllerBase
 {
     [HttpGet("urls")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = ApplicationRoles.Admin)]
     public async Task<IActionResult> GetAllUrls([FromQuery] AdminUrlsGetRequest request)
     {
         var urls = await urlsService.GetAllUrlsAsync(request);

@@ -1,5 +1,5 @@
 ﻿using UrlShortener.Core.DTOs.Algorithm;
-using UrlShortener.Core.Entities;
+using UrlShortener.Dal.Entities;
 
 namespace UrlShortener.Core.Mapper;
 

@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using UrlShortener.Core.Entities;
+using UrlShortener.Dal.Entities;
 
 namespace UrlShortener.Api.Extensions;
 

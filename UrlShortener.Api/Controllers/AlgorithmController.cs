@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using UrlShortener.Core.DTOs.Algorithm;
 using UrlShortener.Core.Services.Interfaces;
+using UrlShortener.Dal;
 
 namespace UrlShortener.Api.Controllers;
 
@@ -9,7 +10,7 @@ namespace UrlShortener.Api.Controllers;
 [Route("api/[controller]")]
 public class AlgorithmController(IAlgorithmService algorithmService) : ControllerBase
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = ApplicationRoles.Admin)]
     [HttpPost]
     public async Task<IActionResult> UpdateAlgorithm([FromBody] UpdateAlgorithmRequest request)
     {
