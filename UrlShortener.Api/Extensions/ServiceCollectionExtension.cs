@@ -38,6 +38,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<IUrlsService, UrlsService>();
         services.AddScoped<IUrlShortenerService, UrlShortenerService>();
         services.AddScoped<IAlgorithmService, AlgorithmService>();
+        services.AddSingleton<IUniqueCodeCacheService, UniqueCodeCacheService>();
     }
 
     public static void AddDal(this IServiceCollection services, IConfiguration configuration)

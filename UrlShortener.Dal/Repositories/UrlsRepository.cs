@@ -33,6 +33,11 @@ public class UrlsRepository(ApplicationDbContext context) : IUrlsRepository
         return await context.UrlInfos.FirstOrDefaultAsync(x=>x.Code == code);
     }
 
+    public async Task<List<string>> GetAllCodesAsync()
+    {
+        return await context.UrlInfos.Select(z => z.Code).ToListAsync();
+    }
+
     public async Task<(IEnumerable<UrlInfo>, int)> GetUrlsAsync(UrlsDalGetRequest request, string userEmail)
     {
         var query = context.UrlInfos.Where(z => (request.SearchParam == null

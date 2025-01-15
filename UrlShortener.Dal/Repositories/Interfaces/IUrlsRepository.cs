@@ -16,6 +16,8 @@ public interface IUrlsRepository
 
     Task<UrlInfo?> GetUrlByCodeAsync(string code);
 
+    Task<List<string>> GetAllCodesAsync();
+    
     Task<(IEnumerable<UrlInfo>, int)> GetUrlsAsync(UrlsDalGetRequest request, string userEmail);
 
     Task DeleteUrlAsync(UrlInfo urlInfo);
