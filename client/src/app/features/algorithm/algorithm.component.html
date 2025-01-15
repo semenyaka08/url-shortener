@@ -18,10 +18,12 @@
       </div>
     </mat-card-content>
 
-    <mat-card-actions class="flex justify-end space-x-4">
-      <button *ngIf="!isEditing" mat-raised-button color="primary" (click)="editAlgorithm()">Edit</button>
-      <button *ngIf="isEditing" mat-raised-button color="primary" (click)="saveChanges()">Save</button>
-      <button *ngIf="isEditing" mat-raised-button color="warn" (click)="cancelEditing()">Cancel</button>
-    </mat-card-actions>
+    <div *appIsAdmin>
+      <mat-card-actions class="flex justify-end space-x-4">
+        <button *ngIf="!isEditing" mat-raised-button color="primary" (click)="editAlgorithm()">Edit</button>
+        <button *ngIf="isEditing" mat-raised-button color="primary" (click)="saveChanges()">Save</button>
+        <button *ngIf="isEditing" mat-raised-button color="warn" (click)="cancelEditing()">Cancel</button>
+      </mat-card-actions>
+    </div>
   </mat-card>
 </div>

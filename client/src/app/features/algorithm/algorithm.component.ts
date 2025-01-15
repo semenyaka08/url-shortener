@@ -1,27 +1,26 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle} from '@angular/material/card';
+import {MatCard, MatCardActions, MatCardContent} from '@angular/material/card';
 import {Algorithm} from '../../shared/models/algorithm';
 import {AlgorithmService} from '../../core/services/algorithm.service';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
 import {NgIf} from '@angular/common';
+import {IsAdminDirective} from '../../shared/directives/is-admin.directive';
 import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-algorithm',
   imports: [
-    MatCardHeader,
     MatCard,
     MatCardContent,
-    MatFormField,
     MatInput,
     FormsModule,
-    MatCardActions,
     NgIf,
+    IsAdminDirective,
+    MatCardActions,
     MatButton,
     MatLabel,
-    MatCardTitle
+    MatFormField
   ],
   templateUrl: './algorithm.component.html',
   standalone: true,
