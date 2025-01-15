@@ -1,5 +1,6 @@
 using UrlShortener.Api.Extensions;
 using UrlShortener.Api.Middlewares;
+using UrlShortener.Core.Services.Interfaces;
 using UrlShortener.Dal.Entities;
 using UrlShortener.Dal.Seeders;
 
@@ -25,6 +26,13 @@ app.UseCors(x => x.AllowAnyHeader()
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGet("/{code}", async (string code, IUrlsService urlsService) =>
+{
+    var originalUrl = await urlsService.GetUrlByCodeAsync(code);
+
+    return Results.Redirect(originalUrl);
+});
 
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>();

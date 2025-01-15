@@ -27,14 +27,6 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
 
         return Ok(shortenedUrl);
     }
-    
-    [HttpGet("code/{code}")]
-    public async Task<IActionResult> RedirectToOriginalUrl([FromRoute] string code)
-    {
-        var originalUrl = await urlsService.GetUrlByCodeAsync(code);
-
-        return Redirect(originalUrl);
-    }
 
     [Authorize]
     [HttpGet("{id}")]
