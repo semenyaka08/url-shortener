@@ -1,0 +1,52 @@
+<div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" class="bg-white">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let url" class="cursor-pointer"  tabindex="0">{{url.id}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="shortenedUrl">
+        <th mat-header-cell *matHeaderCellDef> Shortened Url </th>
+        <td (click)="goToUrlDetails(url.id)" mat-cell *matCellDef="let url" class="cursor-pointer shortenedUrlWidth"  tabindex="0"> <a href="{{url.shortenedUrl}}" target="_blank" (click)="onLinkClick($event, url.originalUrl)">{{url.shortenedUrl}}</a></td>
+      </ng-container>
+
+      <ng-container matColumnDef="originalUrl">
+        <th mat-header-cell *matHeaderCellDef class="myOwnWidth"> Original Url </th>
+        <td (click)="goToUrlDetails(url.id)" mat-cell *matCellDef="let url" class="originalUrlWidth cursor-pointer" tabindex="0"> <a href="{{url.originalUrl}}" target="_blank" (click)="onLinkClick($event, url.originalUrl)">{{url.originalUrl}}</a> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="userEmail">
+        <th mat-header-cell *matHeaderCellDef class="myOwnWidth">User Email</th>
+        <td (click)="goToUrlDetails(url.id)" mat-cell *matCellDef="let url" class="myOwnWidth cursor-pointer" tabindex="0">{{url.userEmail}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef > Date </th>
+        <td mat-cell *matCellDef="let url"> {{url.createdAt | date: 'short'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let url">
+          <button mat-icon-button (click)="deleteUrl(url.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator class="bg-green-700 paginator"
+                   *ngIf="pageResult"
+                   (page) = "onPageEvent($event)"
+                   [length]="pageResult().totalItemsCount"
+                   [pageSize]="linksParams.paginationParams?.pageSize"
+                   [showFirstLastButtons]="true"
+                   [pageSizeOptions]="[4, 8]"
+                   [pageIndex]="pageResult().pageNumber - 1"
+                   aria-label="Select Page" />
+  </div>
+</div>
