@@ -25,10 +25,10 @@ public class UrlsService(IUrlsRepository urlsRepository, IUrlShortenerService ur
             throw new UrlAlreadyShortenedException();
         }
 
-        var code = urlShortenerService.GenerateUniqueCode();
+        var code = await urlShortenerService.GenerateUniqueCode();
         logger.LogInformation("Generated unique code: {Code} for URL: {OriginalUrl}", code, addRequest.OriginalUrl);
 
-        var shortenedUrl = $"{schema}://{host}/api/url/code/{code}";
+        var shortenedUrl = $"{schema}://{host}/{code}";
         
         var entity = addRequest.ToEntity(code, shortenedUrl, userEmail);
 

@@ -7,9 +7,11 @@ namespace UrlShortener.Core.Services;
 public class UrlShortenerService(ILogger<UrlShortenerService> logger, IUniqueCodeCacheService codeCacheService) : IUrlShortenerService
 {
     private readonly Random _random = new();
-
-    public string GenerateUniqueCode()
+    
+    public async Task<string> GenerateUniqueCode()
     {
+        await codeCacheService.InitializeCacheAsync();
+        
         logger.LogInformation("Starting to generate a unique short URL code.");
     
         var codeChars = new char[UrlShorteningConfig.NumberOfCharsInShortenedLink];

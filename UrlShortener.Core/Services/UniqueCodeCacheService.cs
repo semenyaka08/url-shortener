@@ -5,14 +5,15 @@ using UrlShortener.Dal.Repositories.Interfaces;
 
 namespace UrlShortener.Core.Services;
 
-public class UniqueCodeCacheService(ILogger<UniqueCodeCacheService> logger, IServiceScopeFactory scopeFactory) : IUniqueCodeCacheService
+public class UniqueCodeCacheService(ILogger<UniqueCodeCacheService> logger, IServiceScopeFactory scopeFactory)
+    : IUniqueCodeCacheService
 {
-    private readonly HashSet<string> _cachedCodes = new();
-    private bool _isInitialized = false; 
-    
+    private readonly HashSet<string> _cachedCodes = [];
+    public bool IsInitialized;
+
     public async Task InitializeCacheAsync()
     {
-        if (_isInitialized)
+        if (IsInitialized)
         {
             logger.LogWarning("Cache has already been initialized.");
             return;
@@ -20,31 +21,24 @@ public class UniqueCodeCacheService(ILogger<UniqueCodeCacheService> logger, ISer
 
         using var scope = scopeFactory.CreateScope();
         var urlsRepository = scope.ServiceProvider.GetRequiredService<IUrlsRepository>();
-            
+
         logger.LogInformation("Initializing the unique code cache.");
-        
+
         var existingCodes = await urlsRepository.GetAllCodesAsync();
 
-        if (existingCodes.Any())
+        foreach (var code in existingCodes)
         {
-            foreach(var code in existingCodes)
-            {
-                _cachedCodes.Add(code);
-            }
-            
-            logger.LogInformation("Loaded {Count} codes from the database.", _cachedCodes.Count);
-        }
-        else
-        {
-            logger.LogInformation("No codes found in the database during initialization.");
+            _cachedCodes.Add(code);
         }
 
-        _isInitialized = true;
+        logger.LogInformation("Loaded {Count} codes from the database.", _cachedCodes.Count);
+
+        IsInitialized = true;
     }
 
     public bool IsCodeUnique(string code)
     {
-        if (!_isInitialized)
+        if (!IsInitialized)
         {
             logger.LogWarning("Cache has not been initialized, please initialize cache before usage.");
             return true;
@@ -55,7 +49,7 @@ public class UniqueCodeCacheService(ILogger<UniqueCodeCacheService> logger, ISer
 
     public void AddCode(string code)
     {
-        if(!_isInitialized)
+        if (!IsInitialized)
         {
             logger.LogError("Cannot add code to cache, cache is not initialized.");
             return;

@@ -20,13 +20,13 @@ public class UrlShortenerServiceTests
     }
 
    [Fact]
-    public void GenerateUniqueCode_WhenCodeIsUnique_ReturnsCodeAndAddsItToCache()
+    public async Task GenerateUniqueCode_WhenCodeIsUnique_ReturnsCodeAndAddsItToCache()
     {
         // Arrange
        _codeCacheService.IsCodeUnique(Arg.Any<string>()).Returns(true);
 
         // Act
-        var result = _sut.GenerateUniqueCode();
+        var result = await _sut.GenerateUniqueCode();
 
         // Assert
          result.Should().NotBeNullOrEmpty();
@@ -35,40 +35,40 @@ public class UrlShortenerServiceTests
     }
 
     [Fact]
-    public void GenerateUniqueCode_WhenCodeIsNotUnique_RegeneratesCodeAndReturnsUniqueCode()
+    public async Task GenerateUniqueCode_WhenCodeIsNotUnique_RegeneratesCodeAndReturnsUniqueCode()
     {
        // Arrange
         _codeCacheService.IsCodeUnique(Arg.Any<string>())
               .Returns(false, false, true);
         
          // Act
-        var result = _sut.GenerateUniqueCode();
+        var result = await _sut.GenerateUniqueCode();
           // Assert
         result.Should().NotBeNullOrEmpty();
          _codeCacheService.Received(1).AddCode(Arg.Any<string>());
     }
 
     [Fact]
-    public void GenerateUniqueCode_GeneratesCodeWithCorrectLength()
+    public async Task GenerateUniqueCode_GeneratesCodeWithCorrectLength()
     {
         // Arrange
         _codeCacheService.IsCodeUnique(Arg.Any<string>()).Returns(true);
 
         // Act
-        var result = _sut.GenerateUniqueCode();
+        var result = await _sut.GenerateUniqueCode();
 
         // Assert
         result.Should().HaveLength(UrlShorteningConfig.NumberOfCharsInShortenedLink);
     }
         
     [Fact]
-    public void GenerateUniqueCode_GeneratesCodeWithValidChars()
+    public async Task GenerateUniqueCode_GeneratesCodeWithValidChars()
     {
          // Arrange
         _codeCacheService.IsCodeUnique(Arg.Any<string>()).Returns(true);
 
           // Act
-        var result = _sut.GenerateUniqueCode();
+        var result = await _sut.GenerateUniqueCode();
 
         // Assert
          result.All(c => UrlShorteningConfig.Alphabet.Contains(c)).Should().BeTrue();
