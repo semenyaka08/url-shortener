@@ -2,11 +2,12 @@
 using UrlShortener.Core.Common;
 using UrlShortener.Core.DTOs.Admin;
 using UrlShortener.Core.DTOs.URLs;
-using UrlShortener.Core.Entities;
 using UrlShortener.Core.Exceptions;
 using UrlShortener.Core.Mapper;
-using UrlShortener.Core.Repositories.Interfaces;
 using UrlShortener.Core.Services.Interfaces;
+using UrlShortener.Dal.Entities;
+using UrlShortener.Dal.Repositories.Interfaces;
+
 
 namespace UrlShortener.Core.Services;
 
@@ -26,13 +27,15 @@ public class UrlsService(IUrlsRepository urlsRepository, IUrlShortenerService ur
 
         var code = await urlShortenerService.GenerateUniqueCode();
         logger.LogInformation("Generated unique code: {Code} for URL: {OriginalUrl}", code, addRequest.OriginalUrl);
-        
-        var entity = addRequest.ToEntity(code, schema, host, userEmail);
 
-        var shortenedUrl = await urlsRepository.AddUrlAsync(entity);
+        var shortenedUrl = $"{schema}://{host}/api/url/code/{code}";
+        
+        var entity = addRequest.ToEntity(code, shortenedUrl, userEmail);
+
+        var generatedUrl = await urlsRepository.AddUrlAsync(entity);
         logger.LogInformation("Successfully added the shortened URL to the repository: {ShortenedUrl}", shortenedUrl);
 
-        return shortenedUrl.ToDto();
+        return generatedUrl.ToDto();
     }
 
     public async Task<string> GetUrlByCodeAsync(string code)
@@ -68,7 +71,7 @@ public class UrlsService(IUrlsRepository urlsRepository, IUrlShortenerService ur
     
     public async Task<PageResult<UrlGetResponse>> GetUrlsAsync(UrlsGetRequest request, string userEmail)
     {
-        var (urls, totalCount) = await urlsRepository.GetUrlsAsync(request, userEmail);
+        var (urls, totalCount) = await urlsRepository.GetUrlsAsync(request.ToDalDto(), userEmail);
 
         var mappedUrls = urls.Select(x=>x.ToDto());
         
@@ -90,7 +93,7 @@ public class UrlsService(IUrlsRepository urlsRepository, IUrlShortenerService ur
 
     public async Task<PageResult<UrlGetResponse>> GetAllUrlsAsync(AdminUrlsGetRequest request)
     {
-        var (urls, totalCount) = await urlsRepository.GetAllUrlsAsync(request);
+        var (urls, totalCount) = await urlsRepository.GetAllUrlsAsync(request.ToDalDto());
 
         var mappedUrls = urls.Select(x=>x.ToDto());
 

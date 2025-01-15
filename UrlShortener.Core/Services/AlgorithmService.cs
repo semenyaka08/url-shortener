@@ -1,8 +1,8 @@
 ﻿using UrlShortener.Core.DTOs.Algorithm;
 using UrlShortener.Core.Exceptions;
 using UrlShortener.Core.Mapper;
-using UrlShortener.Core.Repositories.Interfaces;
 using UrlShortener.Core.Services.Interfaces;
+using UrlShortener.Dal.Repositories.Interfaces;
 
 namespace UrlShortener.Core.Services;
 

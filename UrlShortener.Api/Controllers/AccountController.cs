@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UrlShortener.Api.Extensions;
-using UrlShortener.Core.Entities;
+using UrlShortener.Dal.Entities;
 
 namespace UrlShortener.Api.Controllers;
 

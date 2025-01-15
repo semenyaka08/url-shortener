@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortener.Api", "UrlShortener.Api\UrlShortener.Api.csproj", "{9B87B2B8-B933-4C3C-9D8D-CBA88C64C818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortener.Infrastructure", "UrlShortener.Infrastructure\UrlShortener.Infrastructure.csproj", "{3B66A8DD-C2FD-483C-B69C-E7061D1C8A9D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortener.Dal", "UrlShortener.Dal\UrlShortener.Dal.csproj", "{3B66A8DD-C2FD-483C-B69C-E7061D1C8A9D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UrlShortener.Core", "UrlShortener.Core\UrlShortener.Core.csproj", "{CC77774B-440F-45E3-B08F-1ECB1F1033A1}"
 EndProject

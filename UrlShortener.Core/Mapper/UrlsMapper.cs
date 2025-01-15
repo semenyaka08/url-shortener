@@ -1,19 +1,20 @@
-﻿using UrlShortener.Core.DTOs.URLs;
-using UrlShortener.Core.Entities;
+﻿using UrlShortener.Core.DTOs.Admin;
+using UrlShortener.Core.DTOs.URLs;
+using UrlShortener.Dal.DTOs.Admin;
+using UrlShortener.Dal.DTOs.Urls;
+using UrlShortener.Dal.Entities;
 
 namespace UrlShortener.Core.Mapper;
 
 public static class UrlsMapper
 {
-    public static UrlInfo ToEntity(this GenerateUrlRequest request, string code, string schema, string host, string userEmail)
+    public static UrlInfo ToEntity(this GenerateUrlRequest request, string code, string shortenedUrl, string userEmail)
     {
         return new UrlInfo
         {
-            Id = Guid.NewGuid(),
-            ShortenedUrl = $"{schema}://{host}/api/url/code/{code}",
+            ShortenedUrl = shortenedUrl,
             Code = code,
             OriginalUrl = request.OriginalUrl,
-            CreatedAt = DateTime.Now,
             UserEmail = userEmail
         };
     }
@@ -28,6 +29,30 @@ public static class UrlsMapper
             OriginalUrl = urlInfo.OriginalUrl,
             CreatedAt = urlInfo.CreatedAt,
             UserEmail = urlInfo.UserEmail
+        };
+    }
+
+    public static UrlsDalGetRequest ToDalDto(this UrlsGetRequest request)
+    {
+        return new UrlsDalGetRequest
+        {
+            PageSize = request.PageSize,
+            PageNumber = request.PageNumber,
+            SortBy = request.SortBy,
+            SortDirection = request.SortDirection,
+            SearchParam = request.SearchParam
+        };
+    }
+    
+    public static AdminDalUrlsGetRequest ToDalDto(this AdminUrlsGetRequest request)
+    {
+        return new AdminDalUrlsGetRequest
+        {
+            PageSize = request.PageSize,
+            PageNumber = request.PageNumber,
+            SortBy = request.SortBy,
+            SortDirection = request.SortDirection,
+            SearchParam = request.SearchParam
         };
     }
 }

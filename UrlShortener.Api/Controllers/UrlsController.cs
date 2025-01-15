@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using UrlShortener.Api.Extensions;
 using UrlShortener.Core.DTOs.URLs;
 using UrlShortener.Core.Services.Interfaces;
+using UrlShortener.Dal;
 
 namespace UrlShortener.Api.Controllers;
 
@@ -40,7 +41,7 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
     public async Task<IActionResult> GetUrlById ([FromRoute] Guid id)
     {
         string? userEmail = User.GetEmail();
-        bool isAdmin = User.IsInRole("Admin");
+        bool isAdmin = User.IsInRole(ApplicationRoles.Admin);
         
         if (userEmail == null)
             return BadRequest("Current user has no email");
@@ -69,7 +70,7 @@ public class UrlController(IUrlsService urlsService) : ControllerBase
     public async Task<IActionResult> DeleteUrl([FromRoute] Guid id)
     {
         string? userEmail = User.GetEmail();
-        bool isAdmin = User.IsInRole("Admin");
+        bool isAdmin = User.IsInRole(ApplicationRoles.Admin);
         
         if (userEmail == null)
             return BadRequest("Current user has no email");
