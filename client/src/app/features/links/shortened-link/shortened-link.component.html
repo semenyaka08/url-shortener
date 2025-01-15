@@ -1,11 +1,10 @@
 <h2 mat-dialog-title>Your Link!</h2>
 <div mat-dialog-content>
   <p>Your shortened link:</p>
-  <mat-form-field appearance="outline" class="w-full">
-    <input matInput [value]="shortenedLink" readonly />
-  </mat-form-field>
+  <div class="url-container cursor-pointer" (click)="copyToClipboard(shortenedLink)" title="Click to copy">
+    {{ shortenedLink }}
+  </div>
 </div>
 <div mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Close</button>
 </div>
-
